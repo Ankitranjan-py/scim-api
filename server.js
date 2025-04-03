@@ -59,3 +59,47 @@ app.delete("/scim/v2/Users/:id", (req, res) => {
 // ✅ Start Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`SCIM API running on port ${PORT}`));
+
+app.get("/scim/v2/ResourceTypes", (req, res) => {
+    res.json({
+        "schemas": ["urn:ietf:params:scim:schemas:core:2.0"],
+        "totalResults": 1,
+        "Resources": [
+            {
+                "id": "User",
+                "name": "User",
+                "description": "User Account",
+                "endpoint": "/scim/v2/Users",
+                "schema": "urn:ietf:params:scim:schemas:core:2.0:User"
+            }
+        ]
+    });
+});
+
+app.get("/scim/v2/Schemas", (req, res) => {
+    res.json({
+        "schemas": ["urn:ietf:params:scim:schemas:core:2.0"],
+        "totalResults": 1,
+        "Resources": [
+            {
+                "id": "urn:ietf:params:scim:schemas:core:2.0:User",
+                "name": "User",
+                "description": "User Schema",
+                "attributes": [
+                    { "name": "userName", "type": "string", "required": true },
+                    {
+                        "name": "name", "type": "complex", "subAttributes": [
+                            { "name": "givenName", "type": "string" },
+                            { "name": "familyName", "type": "string" }
+                        ]
+                    },
+                    {
+                        "name": "emails", "type": "complex", "multiValued": true, "subAttributes": [
+                            { "name": "value", "type": "string" }
+                        ]
+                    }
+                ]
+            }
+        ]
+    });
+});
